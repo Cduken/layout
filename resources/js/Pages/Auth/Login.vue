@@ -22,7 +22,7 @@ const submit = () => {
   <div class="flex w-full h-screen items-center justify-center">
     <form
       @submit.prevent="submit"
-      class="shadow-2xl rounded-lg p-6 w-[600px] bg-transparent backdrop-blur-md border text-white"
+      class="shadow-2xl rounded-lg p-6 w-[600px] bg-white bg-opacity-20 backdrop-blur-md text-white"
     >
       <h1 class="text-center text-3xl mb-4">Login</h1>
 

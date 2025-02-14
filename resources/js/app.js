@@ -1,8 +1,6 @@
 import './bootstrap';
 import '../css/app.css';
 import "boxicons/css/boxicons.min.css";
-
-
 import { createApp, h } from 'vue'
 import { createInertiaApp, Head, Link } from '@inertiajs/vue3'
 import { ZiggyVue } from 'ziggy-js';

@@ -46,7 +46,6 @@ const getStatusClass = (status) => {
               <th class="p-3">Transaction ID</th>
               <th class="p-3">Product Name</th>
               <th class="p-3">Date</th>
-
               <th class="p-3">Status</th>
             </tr>
           </thead>

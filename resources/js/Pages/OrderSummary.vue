@@ -7,18 +7,26 @@ const props = defineProps({
   order: Object,
 });
 
-const { cart, addToCart } = useCart();
+const cartStore = useCart();
 const quantity = ref(1);
 
-const order = computed(
-  () =>
-    props.order || {
+const order = computed(() => {
+  if (!props.order) {
+    return {
       name: "Unknown",
       price: "-",
       description: "No description available",
       image: "",
-    }
-);
+    };
+  }
+
+  return {
+    ...props.order,
+    image: props.order.image.startsWith("http")
+      ? props.order.image
+      : `/images/${props.order.image}`,
+  };
+});
 
 const addProductToCart = () => {
   if (order.value.name !== "Unknown") {
@@ -30,7 +38,7 @@ const addProductToCart = () => {
       quantity: quantity.value,
     };
 
-    addToCart(product);
+    cartStore.addToCart(product);
     alert(`${order.value.name} added to cart!`);
   }
 };
@@ -41,7 +49,7 @@ const addProductToCart = () => {
     <Head title="Order"></Head>
     <div class="flex items-center justify-center min-h-[90vh] p-4">
       <div
-        class="w-full max-w-3xl bg-transparent border backdrop-blur-md shadow-lg rounded-lg p-6"
+        class="w-full max-w-3xl bg-white bg-opacity-20 backdrop-blur-md shadow-lg rounded-lg p-6"
       >
         <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-200 mb-4">
           Order Summary
@@ -62,9 +70,7 @@ const addProductToCart = () => {
 
           <!-- Text Content Section -->
           <div class="w-full md:w-1/2 text-center md:text-left">
-            <h2 class="text-xl md:text-2xl font-semibold text-white">
-              {{ order.name }}
-            </h2>
+            <h2 class="text-xl md:text-2xl font-semibold text-white">{{ order.name }}</h2>
             <p class="text-gray-400 mt-2">{{ order.description }}</p>
             <p class="text-lg font-semibold text-gray-200 mt-2">
               Price: <span class="text-green-500">{{ order.price }}</span>

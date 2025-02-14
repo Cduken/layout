@@ -2,109 +2,125 @@
 import Layout from "./Layout.vue";
 import ProductsCard from "./Components/ProductsCard.vue";
 import { ref } from "vue";
+import { useForm, usePage } from "@inertiajs/vue3";
+import { Inertia } from "@inertiajs/inertia";
 
-const products = ref([
-  {
-    name: "Saging",
-    price: "$10",
-    description: "A sweet and nutritious fruit, perfect for snacks or desserts.",
-    image: "/images/360_F_857216169_pOIbsMZ8vzuvoEzPtCv73wGIMTtTn7M3.webp",
-  },
-  {
-    name: "Ginamos",
-    price: "$20",
-    description:
-      "A traditional Filipino fermented fish paste, commonly used as a savory condiment.",
-    image: "/images/NSC_Ginamos_Article_10222023_89.webp",
-  },
-  {
-    name: "Suka",
-    price: "$30",
-    description:
-      "A popular Filipino vinegar made from fermented coconut or sugarcane, great for dipping sauces and marinades.",
-    image:
-      "/images/vinaigre-de-datu-puti-camarines-sur-philippines-janv-une-photo-en-gros-plan-marque-célèbre-au-aux-construites-par-nutriasia-152063161.webp",
-  },
-  {
-    name: "Sibuyas",
-    price: "$30",
-    description:
-      "Fresh red or white onions, essential for adding flavor to a variety of dishes.",
-    image: "/images/fresh-onion.webp",
-  },
-  {
-    name: "Sili",
-    price: "$30",
-    description:
-      "Spicy chili peppers that add heat and flavor to many Filipino and Asian dishes.",
-    image: "/images/vibrant-red-pepper.webp",
-  },
-  {
-    name: "Luy-a",
-    price: "$30",
-    description:
-      "Fresh ginger root, known for its aromatic and spicy flavor, commonly used in soups, teas, and stir-fries.",
-    image: "/images/ginger-pictures-5gog7qtsj35k75n8.webp",
-  },
-  {
-    name: "Batong",
-    price: "$30",
-    description:
-      "Fresh green beans, great for stir-fried dishes, soups, and side dishes.",
-    image: "/images/fresh-green-beans-white_99293-962.webp",
-  },
-  {
-    name: "Kamatis",
-    price: "$30",
-    description:
-      "Juicy and ripe tomatoes, perfect for salads, sauces, and Filipino dishes like sinigang.",
-    image: "/images/tomato.webp",
-  },
-  {
-    name: "Talong",
-    price: "$30",
-    description: "Fresh eggplants, ideal for grilling, frying, or making tortang talong.",
-    image: "/images/eggplant.webp",
-  },
+// Fetch products from Laravel
+const products = usePage().props.products;
 
-  {
-    name: "Fries",
-    price: "$10",
-    description: "A popular fast food item in the Philippines",
-    image:
-      "/images/French fries 3d icon transparent background _ Premium AI-generated image.jpg",
-  },
+// Modal State
+const showModal = ref(false);
 
-  {
-    name: "Creatine",
-    price: "$50",
-    description: "A popular pre-workout supplement",
-    image: "/images/creatine.webp",
-  },
+// Form Data using Inertia Form
+const form = useForm({
+  name: "",
+  price: "",
+  description: "",
+  image: null,
+});
 
-  {
-    name: "Whey Protein",
-    price: "$100",
-    description:
-      "A popular pre-workout supplement to achieve your protein intake everyday.",
-    image: "/images/whey.webp",
-  },
-]);
+// Open Modal
+const openModal = () => {
+  showModal.value = true;
+};
+
+// Close Modal
+const closeModal = () => {
+  showModal.value = false;
+  form.reset();
+};
+
+// Handle File Upload
+const handleFileUpload = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    form.image = file;
+  }
+};
+
+// Add Product (Using Inertia)
+const addProduct = () => {
+  form.post("/products", {
+    forceFormData: true,
+    onSuccess: () => {
+      closeModal();
+      Inertia.visit("/products");
+    },
+    onError: (errors) => {
+      alert("Error adding product: " + JSON.stringify(errors));
+    },
+  });
+};
 </script>
 
 <template>
+  <Head title="Products" />
   <Layout>
-    <Head title="Products" />
+    <h1 class="text-3xl p-6 font-bold mb-[-20px] text-white text-center">All Products</h1>
 
-    <h1 class="text-3xl p-6 font-bold mb-[-20px] text-white">All Products</h1>
-    <div
-      class="grid grid-cols-1 overflow-y-auto max-h-[600px] sm:grid-cols-2 md:grid-cols-3 gap-6 p-6"
+    <button
+      @click="openModal"
+      class="bg-blue-500 text-white px-4 py-2 rounded-lg m-6 hover:bg-blue-700"
     >
-      <ProductsCard
-        v-for="(product, index) in products"
-        :key="index"
-        :product="product"
-      />
+      + Add Product
+    </button>
+
+    <div
+      class="overflow-y-auto max-h-[500px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 p-6"
+    >
+      <ProductsCard v-for="product in products" :key="product.id" :product="product" />
+    </div>
+
+    <div
+      v-if="showModal"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+        <h2 class="text-xl font-bold mb-4">Add New Product</h2>
+
+        <!-- Form -->
+        <form @submit.prevent="addProduct" enctype="multipart/form-data">
+          <label>Name:</label>
+          <input v-model="form.name" type="text" class="w-full p-2 border rounded mb-2" />
+
+          <label>Price:</label>
+          <input
+            v-model="form.price"
+            type="text"
+            class="w-full p-2 border rounded mb-2"
+          />
+
+          <label>Description:</label>
+          <textarea
+            v-model="form.description"
+            class="w-full p-2 border rounded mb-2"
+          ></textarea>
+
+          <label>Upload Image:</label>
+          <input
+            type="file"
+            accept="image/*"
+            @change="handleFileUpload"
+            class="w-full p-2 border rounded mb-2"
+          />
+
+          <div class="flex justify-end space-x-2 mt-4">
+            <button
+              type="button"
+              @click="closeModal"
+              class="bg-gray-400 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-700"
+            >
+              Add
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   </Layout>
 </template>

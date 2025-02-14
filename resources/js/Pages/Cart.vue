@@ -16,17 +16,14 @@ const checkoutItem = (index) => {
   if (index >= 0 && index < cart.value.length) {
     const checkedOutItem = cart.value[index];
 
-    // Make sure price & quantity are numbers
     const amount = Number(checkedOutItem.quantity) * Number(checkedOutItem.price);
 
-    // Debug
     console.log(`Checking out: ${checkedOutItem.name}, Amount: ${amount}`);
 
-    // Create transaction entry
     const transaction = {
       id: `TXN-${Date.now()}`,
       name: checkedOutItem.name,
-      amount: amount, // Ensure it's a number
+      amount: amount,
       date: new Date().toLocaleString(),
       status: "Completed",
     };
@@ -81,7 +78,7 @@ const clearCartHandler = () => {
     <div
       class="max-w-[90%] mx-auto mt-10 shadow-lg h-[100vh] rounded-lg p-6 overflow-y-auto max-h-[600px]"
     >
-      <h1 class="text-3xl ml-4 font-bold text-gray-200 mb-4">Shopping Cart</h1>
+      <h1 class="text-3xl font-bold text-center text-gray-200 mb-4">Shopping Cart</h1>
 
       <div
         v-if="cart.length > 0"

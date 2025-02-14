@@ -47,7 +47,7 @@ const toggleFAQ = (index) => {
             <span>{{ faq.question }}</span>
             <span
               :class="faq.open ? 'rotate-180' : 'rotate-0'"
-              class="transition-transform"
+              class="transition-transform transform duration-300"
               >▼</span
             >
           </button>

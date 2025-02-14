@@ -10,12 +10,12 @@ export const useCart = () => {
     } else {
       cart.value.push(product);
     }
-    localStorage.setItem("cart", JSON.stringify(cart.value)); // Store data
+    localStorage.setItem("cart", JSON.stringify(cart.value));
   };
 
   const clearCart = () => {
-    cart.value = []; // Reset cart state
-    localStorage.removeItem("cart"); // Remove from localStorage
+    cart.value = [];
+    localStorage.removeItem("cart");
   };
 
   return { cart, addToCart, clearCart };

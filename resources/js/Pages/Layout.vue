@@ -134,8 +134,8 @@ body {
 
 .cart-count {
   position: absolute;
-  top: -6px; /* Adjusted to align properly */
-  right: -10px; /* Adjusted so it stays in the right place */
+  top: -6px;
+  right: -10px;
   background: red;
   color: white;
   font-size: 12px;

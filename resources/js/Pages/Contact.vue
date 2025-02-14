@@ -22,7 +22,7 @@ const submitForm = () => {
     <div class="flex flex-col items-center h-[90vh] justify-center">
       <form
         @submit.prevent="submitForm"
-        class="bg-transparent backdrop-blur-md p-6 rounded-lg shadow-lg w-full max-w-lg border"
+        class="bg-white bg-opacity-15 backdrop-blur-md p-6 rounded-lg shadow-lg w-full max-w-lg"
       >
         <h1 class="text-3xl text-center font-bold my-4 text-white">Contact</h1>
 
